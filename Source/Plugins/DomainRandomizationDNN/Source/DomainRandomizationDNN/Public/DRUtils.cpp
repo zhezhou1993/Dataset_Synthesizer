@@ -18,6 +18,16 @@ FRandomRotationData::FRandomRotationData()
     bRandomizeRotationInACone = true;
     RandomConeHalfAngle = 45.f;
 
+    base_count = 9.f;
+    randomize_Yawcount = -1.0 * base_count;
+    randomize_Rollcount = -1.0 * base_count;
+    randomize_Pitchcount = -1.0 * base_count;
+    randomize_Yawint = 180.0/base_count;
+    randomize_Rollint = 180.0/base_count;
+    randomize_Pitchint = 180.0/base_count;
+    bShouldUniformSample = true;
+
+
     bRandomizePitch = false;
     PitchRange = FFloatInterval(-180.f, 180.f);
 
@@ -28,27 +38,43 @@ FRandomRotationData::FRandomRotationData()
     YawRange = FFloatInterval(-180.f, 180.f);
 }
 
-FRotator FRandomRotationData::GetRandomRotation() const
+FRotator FRandomRotationData::GetRandomRotation()
 {
     FRotator RandomRotation = FRotator::ZeroRotator;
 
-    if (bRandomizeYaw)
-    {
-        RandomRotation.Yaw = FMath::RandRange(YawRange.Min, YawRange.Max);
+    // if (bRandomizeYaw)
+    // {
+    //     RandomRotation.Yaw = FMath::RandRange(YawRange.Min, YawRange.Max);
+    // }
+    // if (bRandomizeRoll)
+    // {
+    //     RandomRotation.Roll = FMath::RandRange(RollRange.Min, RollRange.Max);
+    // }
+    // if (bRandomizePitch)
+    // {
+    //     RandomRotation.Pitch = FMath::RandRange(PitchRange.Min, PitchRange.Max);
+    // }
+    RandomRotation.Yaw = randomize_Yawcount * randomize_Yawint;
+    RandomRotation.Roll = randomize_Rollcount * randomize_Rollint;
+    RandomRotation.Pitch = randomize_Pitchcount * randomize_Pitchint;
+    randomize_Yawcount = randomize_Yawcount + 1;
+    if (randomize_Yawcount > 9){
+        randomize_Yawcount = -9;
+        randomize_Rollcount = randomize_Rollcount + 1;
+        if (randomize_Rollcount > 9){
+            randomize_Rollcount = -9;
+            randomize_Pitchcount = randomize_Pitchcount + 1;
+            if (randomize_Pitchcount > 9){
+                randomize_Pitchcount = -9;
+            }
+        }
     }
-    if (bRandomizeRoll)
-    {
-        RandomRotation.Roll = FMath::RandRange(RollRange.Min, RollRange.Max);
-    }
-    if (bRandomizePitch)
-    {
-        RandomRotation.Pitch = FMath::RandRange(PitchRange.Min, PitchRange.Max);
-    }
+
 
     return RandomRotation;
 }
 
-FRotator FRandomRotationData::GetRandomRotationRelative(const FRotator& BaseRotation) const
+FRotator FRandomRotationData::GetRandomRotationRelative(const FRotator& BaseRotation) 
 {
     if (bRandomizeRotationInACone)
     {

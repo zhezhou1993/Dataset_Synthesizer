@@ -17,13 +17,14 @@ struct DOMAINRANDOMIZATIONDNN_API FRandomRotationData
     GENERATED_BODY()
 
 public:
+    
     FRandomRotationData();
-
+    float base_count, randomize_Yawint, randomize_Rollint, randomize_Pitchint, randomize_Yawcount, randomize_Rollcount, randomize_Pitchcount;
     // Get a random rotation from the constrained data
-    FRotator GetRandomRotation() const;
+    FRotator GetRandomRotation();
 
     // Get a random rotation related to (the constrained data is applied around) a fixed rotation
-    FRotator GetRandomRotationRelative(const FRotator& BaseRotation) const;
+    FRotator GetRandomRotationRelative(const FRotator& BaseRotation) ;
 
     bool ShouldRandomized() const
     {
@@ -32,6 +33,15 @@ public:
 
 protected: // Editor properties
     // If true, generate random rotation inside a cone
+    // static float base_count, randomize_Yawint, randomize_Rollint, randomize_Pitchint, randomize_Yawcount, randomize_Rollcount, randomize_Pitchcount;
+    
+    UPROPERTY(EditAnywhere, meta = (PinHiddenByDefault, InlineEditConditionToggle))
+    bool bShouldUniformSample;
+
+    // UPROPERTY(EditAnywhere, meta = (EditCondition = bShouldUniformSample))
+    // float base_count;
+
+    
     UPROPERTY(EditAnywhere, meta = (PinHiddenByDefault, InlineEditConditionToggle))
     bool bRandomizeRotationInACone;
 
